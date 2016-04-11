@@ -1,0 +1,24 @@
+textarea{
+  display: inline;
+  resize: none;
+  border: 4px solid black;
+  border-radius: 8px;
+}
+h1{
+  color: #ecf0f1;
+  margin-left: 170px;
+}
+.conversation_box{
+  text-align: center;
+  margin-bottom: 150px;
+  width: 990px;
+  margin: auto;
+}
+.container{
+  background-color: #34495e;
+  width: 100%;
+
+}
+.btn{
+
+}

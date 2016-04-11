@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <link rel='stylesheet' href='style.css'/>
+    <meta charset="utf-8">
+    <title>Chat room</title>
+    <script>
+      $(document).ready(function(){
+        var name = prompt('Please enter your screen name');
+        var id;
+        var socket = io.connect();
+        socket.emit('got_a_new_user', {name: name});
+        socket.on('new_user', function(new_user){
+          id = new_user.id;
+          console.log(id)
+          new_user_string = new_user.name +" joined the chat room";
+          $('#conversation').append("\n" + new_user_string)
+          console.log(new_user_string);
+          return false;
+        });
+        $('form').submit(function(){
+          user_message = {
+            name: name,
+            id: id,
+            message: $('#message_text').val()
+          };
+          console.log(user_message);
+          socket.emit('chat_message', user_message)
+          
+          return false;
+        });
+        socket.on('chat_response', function(message){
+          console.log(message);
+          $('#conversation').append("\n" + message.name + ": "+message.message);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class='container'>
+      <u><h1>Conversation board</h1></u>
+      <div class='conversation_box'>
+        <textarea readonly id='conversation' rows='20' cols='120'></textarea>
+        <form>
+          <textarea id="message_text" rows="2" cols="120" placeholder='enter your message here'></textarea>
+          <input class='btn btn-success pull-right' type='submit' value='submit' />
+        </form>
+    </div>
+    </div>
+  </body>
+</html>
